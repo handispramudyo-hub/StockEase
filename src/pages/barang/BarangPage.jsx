@@ -6,7 +6,7 @@ import Modal from '@/components/common/Modal'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
 import PageHeader from '@/components/common/PageHeader'
 import { Plus, Edit, Trash2, Package, Eye, Printer } from 'lucide-react'
-import { cn, formatCurrency } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import PDFPreviewModal from '@/components/common/PDFPreviewModal'
 
 export default function BarangPage() {
@@ -22,7 +22,7 @@ export default function BarangPage() {
   const [showPDF, setShowPDF] = useState(false)
   const [form, setForm] = useState({})
 
-  const defaultForm = { kode_barang: '', barcode: '', nama: '', kategori_id: '', harga_beli: '', harga_jual: '', stok: '', stok_minimum: 10, satuan: 'PCS', status: 'aktif' }
+  const defaultForm = { nama: '', kategori_id: '', stok: '', stok_minimum: 10, satuan: 'PCS', status: 'aktif' }
 
   const fetchData = async () => {
     try {
@@ -36,7 +36,7 @@ export default function BarangPage() {
   const kMap = useMemo(() => Object.fromEntries(kategoriList.map(k => [k.id, k])), [kategoriList])
 
   const filtered = data.filter(b => {
-    const matchSearch = b.nama.toLowerCase().includes(search.toLowerCase()) || b.kode_barang.toLowerCase().includes(search.toLowerCase())
+    const matchSearch = b.nama.toLowerCase().includes(search.toLowerCase())
     const matchKategori = !filterKategori || b.kategori_id === Number(filterKategori)
     return matchSearch && matchKategori
   })
@@ -44,13 +44,11 @@ export default function BarangPage() {
   const openAdd = () => { setEditItem(null); setForm(defaultForm); setShowModal(true) }
   const openEdit = (item) => { setEditItem(item); setForm({ ...item, kategori_id: item.kategori_id }); setShowModal(true) }
 
-  const genBarcode = () => { setForm(f => ({ ...f, barcode: '899' + Math.random().toString().slice(2, 14) })) }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!form.nama?.trim() || !form.kode_barang?.trim()) return toast.error('Kode dan Nama barang wajib diisi')
+    if (!form.nama?.trim()) return toast.error('Nama barang wajib diisi')
     try {
-      const payload = { ...form, harga_beli: Number(form.harga_beli), harga_jual: Number(form.harga_jual), stok_minimum: Number(form.stok_minimum), kategori_id: Number(form.kategori_id) }
+      const payload = { ...form, stok_minimum: Number(form.stok_minimum), kategori_id: Number(form.kategori_id) }
       if (editItem) { delete payload.stok; await api.put(`/barang/${editItem.id}`, { ...editItem, ...payload }); toast.success('Barang berhasil diupdate') }
       else { payload.stok = Number(form.stok || 0); await api.post('/barang', { ...payload, created_at: new Date().toISOString() }); toast.success('Barang berhasil ditambahkan') }
       setShowModal(false); fetchData()
@@ -70,11 +68,8 @@ export default function BarangPage() {
 
   const columns = [
     { header: 'No', accessor: (_, i) => i + 1, width: '50px' },
-    { header: 'Kode', accessor: (row) => <span className="px-2 py-0.5 bg-muted rounded text-xs font-mono">{row.kode_barang}</span> },
     { header: 'Nama Barang', accessor: (row) => <div className="flex items-center gap-2"><Package className="w-4 h-4 text-muted-foreground" />{row.nama}</div> },
     { header: 'Kategori', accessor: (row) => kMap[row.kategori_id]?.nama || '-' },
-    { header: 'H. Beli', accessor: (row) => formatCurrency(row.harga_beli) },
-    { header: 'H. Jual', accessor: (row) => formatCurrency(row.harga_jual) },
     { header: 'Stok', accessor: (row) => <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium border", stokBadge(row))}>{row.stok} {row.satuan}</span> },
     { header: 'Status', accessor: (row) => <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", row.status === 'aktif' ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700")}>{row.status}</span> },
     { header: 'Aksi', accessor: (row) => (
@@ -99,7 +94,7 @@ export default function BarangPage() {
       } />
       <div className="bg-card rounded-xl border border-border">
         <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-3">
-          <input type="text" placeholder="Cari nama/kode barang..." value={search} onChange={e => setSearch(e.target.value)} className={cn(inputCls, "max-w-sm")} />
+          <input type="text" placeholder="Cari nama barang..." value={search} onChange={e => setSearch(e.target.value)} className={cn(inputCls, "max-w-sm")} />
           <select value={filterKategori} onChange={e => setFilterKategori(e.target.value)} className={cn(selectCls, "max-w-[200px]")}>
             <option value="">Semua Kategori</option>
             {kategoriList.map(k => <option key={k.id} value={k.id}>{k.nama}</option>)}
@@ -111,15 +106,9 @@ export default function BarangPage() {
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editItem ? 'Edit Barang' : 'Tambah Barang'} size="lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label className="block text-sm font-medium mb-1">Kode Barang *</label><input type="text" value={form.kode_barang || ''} onChange={e => setForm({...form, kode_barang: e.target.value})} className={inputCls} required /></div>
-            <div><label className="block text-sm font-medium mb-1">Barcode</label>
-              <div className="flex gap-2"><input type="text" value={form.barcode || ''} onChange={e => setForm({...form, barcode: e.target.value})} className={cn(inputCls, "flex-1")} />
-              <button type="button" onClick={genBarcode} className="px-3 py-2 bg-muted rounded-lg text-sm whitespace-nowrap">Generate</button></div></div>
             <div className="md:col-span-2"><label className="block text-sm font-medium mb-1">Nama Barang *</label><input type="text" value={form.nama || ''} onChange={e => setForm({...form, nama: e.target.value})} className={inputCls} required /></div>
             <div><label className="block text-sm font-medium mb-1">Kategori</label><select value={form.kategori_id || ''} onChange={e => setForm({...form, kategori_id: e.target.value})} className={selectCls}><option value="">Pilih</option>{kategoriList.map(k=><option key={k.id} value={k.id}>{k.nama}</option>)}</select></div>
             <div><label className="block text-sm font-medium mb-1">Satuan</label><select value={form.satuan || 'PCS'} onChange={e => setForm({...form, satuan: e.target.value})} className={selectCls}>{['PCS','BOX','PACK','UNIT','KG','LITER','METER','DUS','BOTOL','KARUNG'].map(s=><option key={s}>{s}</option>)}</select></div>
-            <div><label className="block text-sm font-medium mb-1">Harga Beli</label><input type="number" value={form.harga_beli || ''} onChange={e => setForm({...form, harga_beli: e.target.value})} className={inputCls} /></div>
-            <div><label className="block text-sm font-medium mb-1">Harga Jual</label><input type="number" value={form.harga_jual || ''} onChange={e => setForm({...form, harga_jual: e.target.value})} className={inputCls} /></div>
             {!editItem && <div><label className="block text-sm font-medium mb-1">Stok Awal</label><input type="number" value={form.stok || ''} onChange={e => setForm({...form, stok: e.target.value})} className={inputCls} /></div>}
             <div><label className="block text-sm font-medium mb-1">Stok Minimum</label><input type="number" value={form.stok_minimum || ''} onChange={e => setForm({...form, stok_minimum: e.target.value})} className={inputCls} /></div>
             <div><label className="block text-sm font-medium mb-1">Status</label><select value={form.status || 'aktif'} onChange={e => setForm({...form, status: e.target.value})} className={selectCls}><option value="aktif">Aktif</option><option value="nonaktif">Nonaktif</option></select></div>
@@ -135,12 +124,8 @@ export default function BarangPage() {
         <Modal isOpen={!!showDetail} onClose={() => setShowDetail(null)} title="Detail Barang" size="md">
           <div className="space-y-3">
             {[
-              ['Kode Barang', showDetail.kode_barang],
-              ['Barcode', showDetail.barcode],
               ['Nama', showDetail.nama],
               ['Kategori', kMap[showDetail.kategori_id]?.nama],
-              ['Harga Beli', formatCurrency(showDetail.harga_beli)],
-              ['Harga Jual', formatCurrency(showDetail.harga_jual)],
               ['Stok', `${showDetail.stok} ${showDetail.satuan}`],
               ['Stok Minimum', showDetail.stok_minimum],
               ['Status', showDetail.status],
@@ -161,11 +146,8 @@ export default function BarangPage() {
           filename="laporan-barang"
           columns={[
             { header: 'No', accessor: (_, i) => i + 1 },
-            { header: 'Kode', accessor: 'kode_barang' },
             { header: 'Nama', accessor: 'nama' },
             { header: 'Kategori', accessor: (row) => kMap[row.kategori_id]?.nama || '-' },
-            { header: 'H. Beli', accessor: (row) => formatCurrency(row.harga_beli) },
-            { header: 'H. Jual', accessor: (row) => formatCurrency(row.harga_jual) },
             { header: 'Stok', accessor: (row) => `${row.stok} ${row.satuan}` },
             { header: 'Status', accessor: (row) => row.status },
           ]}

@@ -39,21 +39,6 @@
   ],
   "kategori": [
     {
-      "id": 1,
-      "nama": "Umum",
-      "warna": "#3B82F6"
-    },
-    {
-      "id": 2,
-      "nama": "Makanan",
-      "warna": "#EF4444"
-    },
-    {
-      "id": 3,
-      "nama": "Minuman",
-      "warna": "#10B981"
-    },
-    {
       "id": 4,
       "nama": "ATK",
       "warna": "#F59E0B"
@@ -166,23 +151,6 @@
       "created_at": "2026-07-01T08:00:00.000Z"
     },
     {
-      "id": 3,
-      "kode_barang": "BRG-003",
-      "barcode": "8991234567892",
-      "nama": "Indomie Goreng",
-      "kategori_id": 2,
-      "supplier_id": 2,
-      "gudang_id": 1,
-      "harga_beli": 2500,
-      "harga_jual": 3500,
-      "stok": 500,
-      "stok_minimum": 50,
-      "satuan": "PCS",
-      "gambar": null,
-      "status": "aktif",
-      "created_at": "2026-07-01T08:00:00.000Z"
-    },
-    {
       "id": 4,
       "kode_barang": "BRG-004",
       "barcode": "8991234567893",
@@ -228,40 +196,6 @@
       "harga_jual": 175000,
       "stok": 15,
       "stok_minimum": 5,
-      "satuan": "UNIT",
-      "gambar": null,
-      "status": "aktif",
-      "created_at": "2026-07-01T08:00:00.000Z"
-    },
-    {
-      "id": 7,
-      "kode_barang": "BRG-007",
-      "barcode": "8991234567896",
-      "nama": "Snack Chitato",
-      "kategori_id": 2,
-      "supplier_id": 3,
-      "gudang_id": 1,
-      "harga_beli": 10000,
-      "harga_jual": 14000,
-      "stok": 3,
-      "stok_minimum": 15,
-      "satuan": "BOX",
-      "gambar": null,
-      "status": "aktif",
-      "created_at": "2026-07-01T08:00:00.000Z"
-    },
-    {
-      "id": 8,
-      "kode_barang": "BRG-008",
-      "barcode": "8991234567897",
-      "nama": "Laptop Lenovo",
-      "kategori_id": 5,
-      "supplier_id": 2,
-      "gudang_id": 2,
-      "harga_beli": 8500000,
-      "harga_jual": 10500000,
-      "stok": 0,
-      "stok_minimum": 2,
       "satuan": "UNIT",
       "gambar": null,
       "status": "aktif",
