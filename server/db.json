@@ -1,0 +1,376 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "nama": "Administrator",
+      "email": "admin@stockease.com",
+      "password": "password",
+      "role": "admin",
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "nama": "Budi Santoso",
+      "email": "budi@stockease.com",
+      "password": "password",
+      "role": "staff_gudang",
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "nama": "Siti Rahayu",
+      "email": "siti@stockease.com",
+      "password": "password",
+      "role": "staff_penjualan",
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "nama": "Andi Wijaya",
+      "email": "andi@stockease.com",
+      "password": "password",
+      "role": "owner",
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    }
+  ],
+  "kategori": [
+    {
+      "id": 1,
+      "nama": "Umum",
+      "warna": "#3B82F6"
+    },
+    {
+      "id": 2,
+      "nama": "Makanan",
+      "warna": "#EF4444"
+    },
+    {
+      "id": 3,
+      "nama": "Minuman",
+      "warna": "#10B981"
+    },
+    {
+      "id": 4,
+      "nama": "ATK",
+      "warna": "#F59E0B"
+    },
+    {
+      "id": 5,
+      "nama": "Elektronik",
+      "warna": "#8B5CF6"
+    }
+  ],
+  "supplier": [
+    {
+      "id": 1,
+      "nama": "PT. Sumber Rejeki",
+      "email": "info@sumberrejeki.co.id",
+      "telepon": "021-5551234",
+      "alamat": "Jl. Raya Utama No. 123, Jakarta Pusat",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "nama": "CV. Berkah Jaya",
+      "email": "berkah@jaya.co.id",
+      "telepon": "021-5555678",
+      "alamat": "Jl. Semangat No. 45, Jakarta Selatan",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "nama": "UD. Makmur Abadi",
+      "email": "makmur@abadi.co.id",
+      "telepon": "021-5559012",
+      "alamat": "Jl. Sejahtera No. 67, Jakarta Barat",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    }
+  ],
+  "customer": [
+    {
+      "id": 1,
+      "nama": "Toko ABC",
+      "email": "tokoabc@email.com",
+      "telepon": "081234567890",
+      "alamat": "Jl. Merdeka No. 10, Bandung",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "nama": "CV. Jaya Bersama",
+      "email": "jaya@bersama.co.id",
+      "telepon": "081234567891",
+      "alamat": "Jl. Pahlawan No. 25, Surabaya",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "nama": "Warung Berkah",
+      "email": "berkah@email.com",
+      "telepon": "081234567892",
+      "alamat": "Jl. Kenanga No. 8, Semarang",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    }
+  ],
+  "gudang": [
+    {
+      "id": 1,
+      "nama": "Gudang Utama",
+      "lokasi": "Jakarta Pusat",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "nama": "Gudang Cabang",
+      "lokasi": "Jakarta Selatan",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    }
+  ],
+  "barang": [
+    {
+      "id": 1,
+      "kode_barang": "BRG-001",
+      "barcode": "8991234567890",
+      "nama": "Kertas A4 70g",
+      "kategori_id": 4,
+      "supplier_id": 1,
+      "gudang_id": 1,
+      "harga_beli": 45000,
+      "harga_jual": 55000,
+      "stok": 150,
+      "stok_minimum": 20,
+      "satuan": "PCS",
+      "gambar": null,
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "kode_barang": "BRG-002",
+      "barcode": "8991234567891",
+      "nama": "Pulpen Pilot",
+      "kategori_id": 4,
+      "supplier_id": 1,
+      "gudang_id": 1,
+      "harga_beli": 3000,
+      "harga_jual": 5000,
+      "stok": 200,
+      "stok_minimum": 30,
+      "satuan": "PCS",
+      "gambar": null,
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "kode_barang": "BRG-003",
+      "barcode": "8991234567892",
+      "nama": "Indomie Goreng",
+      "kategori_id": 2,
+      "supplier_id": 2,
+      "gudang_id": 1,
+      "harga_beli": 2500,
+      "harga_jual": 3500,
+      "stok": 500,
+      "stok_minimum": 50,
+      "satuan": "PCS",
+      "gambar": null,
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "kode_barang": "BRG-004",
+      "barcode": "8991234567893",
+      "nama": "Aqua 600ml",
+      "kategori_id": 3,
+      "supplier_id": 3,
+      "gudang_id": 1,
+      "harga_beli": 3000,
+      "harga_jual": 4000,
+      "stok": 300,
+      "stok_minimum": 40,
+      "satuan": "BOTOL",
+      "gambar": null,
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "kode_barang": "BRG-005",
+      "barcode": "8991234567894",
+      "nama": "Tinta Printer Canon",
+      "kategori_id": 5,
+      "supplier_id": 2,
+      "gudang_id": 2,
+      "harga_beli": 85000,
+      "harga_jual": 110000,
+      "stok": 8,
+      "stok_minimum": 10,
+      "satuan": "BOTOL",
+      "gambar": null,
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "kode_barang": "BRG-006",
+      "barcode": "8991234567895",
+      "nama": "Mouse Logitech",
+      "kategori_id": 5,
+      "supplier_id": 2,
+      "gudang_id": 2,
+      "harga_beli": 120000,
+      "harga_jual": 175000,
+      "stok": 15,
+      "stok_minimum": 5,
+      "satuan": "UNIT",
+      "gambar": null,
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "kode_barang": "BRG-007",
+      "barcode": "8991234567896",
+      "nama": "Snack Chitato",
+      "kategori_id": 2,
+      "supplier_id": 3,
+      "gudang_id": 1,
+      "harga_beli": 10000,
+      "harga_jual": 14000,
+      "stok": 3,
+      "stok_minimum": 15,
+      "satuan": "BOX",
+      "gambar": null,
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "kode_barang": "BRG-008",
+      "barcode": "8991234567897",
+      "nama": "Laptop Lenovo",
+      "kategori_id": 5,
+      "supplier_id": 2,
+      "gudang_id": 2,
+      "harga_beli": 8500000,
+      "harga_jual": 10500000,
+      "stok": 0,
+      "stok_minimum": 2,
+      "satuan": "UNIT",
+      "gambar": null,
+      "status": "aktif",
+      "created_at": "2026-07-01T08:00:00.000Z"
+    }
+  ],
+  "stok_masuk": [
+    {
+      "id": 1,
+      "barang_id": 1,
+      "qty": 50,
+      "tanggal": "2026-07-05",
+      "keterangan": "Pengadaan awal",
+      "dari_siapa": "PT. Sumber Rejeki",
+      "created_at": "2026-07-05T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "barang_id": 2,
+      "qty": 100,
+      "tanggal": "2026-07-05",
+      "keterangan": "Pengadaan awal",
+      "dari_siapa": "PT. Sumber Rejeki",
+      "created_at": "2026-07-05T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "barang_id": 3,
+      "qty": 300,
+      "tanggal": "2026-07-05",
+      "keterangan": "Pengadaan awal",
+      "dari_siapa": "UD. Makmur Abadi",
+      "created_at": "2026-07-05T08:00:00.000Z"
+    }
+  ],
+  "stok_keluar": [
+    {
+      "id": 1,
+      "barang_id": 7,
+      "qty": 2,
+      "tanggal": "2026-07-16",
+      "keterangan": "Barang rusak",
+      "tujuan": "Gudang Retur",
+      "created_at": "2026-07-14T10:00:00.000Z"
+    }
+  ],
+  "aktivitas": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "aktivitas": "Login ke sistem",
+      "waktu": "2026-07-15T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "aktivitas": "Update stok Kertas A4",
+      "waktu": "2026-07-15T08:15:00.000Z"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "aktivitas": "Stok masuk: Aqua 600ml +100 dari UD. Makmur Abadi",
+      "waktu": "2026-07-15T11:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "aktivitas": "Stok keluar: Snack Chitato -2 ke Gudang Retur (Barang rusak)",
+      "waktu": "2026-07-15T13:00:00.000Z"
+    },
+    {
+      "aktivitas": "Update stok keluar: Snack Chitato qty 2 → 2 ke Gudang Retur",
+      "tanggal": "2026-07-16",
+      "id": 5
+    }
+  ],
+  "notifikasi": [
+    {
+      "id": 1,
+      "judul": "Stok Menipis",
+      "pesan": "Tinta Printer Canon hanya tersisa 8 unit",
+      "status": "unread",
+      "waktu": "2026-07-15T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "judul": "Stok Habis",
+      "pesan": "Laptop Lenovo stok sudah habis",
+      "status": "unread",
+      "waktu": "2026-07-15T08:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "judul": "Stok Menipis",
+      "pesan": "Snack Chitato hanya tersisa 3 box",
+      "status": "unread",
+      "waktu": "2026-07-15T08:00:00.000Z"
+    }
+  ],
+  "settings": {
+    "id": 1,
+    "nama_aplikasi": "StockFlow",
+    "nama_perusahaan": "PT. StockFlow Indonesia",
+    "alamat": "Jl. Teknologi No. 123, Jakarta",
+    "telepon": "021-12345678",
+    "email": "info@stockflow.co.id",
+    "website": "www.stockflow.co.id",
+    "logo": null,
+    "footer": "© 2026 StockFlow. All rights reserved."
+  }
+}
