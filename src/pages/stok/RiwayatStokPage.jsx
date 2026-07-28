@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import api from '@/api/client'
 import DataTable from '@/components/common/DataTable'
 import PageHeader from '@/components/common/PageHeader'
-import { cn } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 
   const tipeBadge = {
   Masuk: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
@@ -87,7 +87,7 @@ export default function RiwayatStokPage() {
 
   const columns = [
     { header: 'No', accessor: (_, i) => i + 1, width: '50px' },
-    { header: 'Tanggal', accessor: 'tanggal' },
+    { header: 'Tanggal', accessor: (row) => formatDate(row.tanggal) },
     { header: 'Barang', accessor: 'barang' },
     { header: 'Tipe', accessor: (row) => (
       <span className={cn('px-2 py-0.5 rounded-full text-xs font-medium', tipeBadge[row.tipe])}>

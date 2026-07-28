@@ -3,7 +3,7 @@ import api from '@/api/client'
 import PageHeader from '@/components/common/PageHeader'
 import PDFPreviewModal from '@/components/common/PDFPreviewModal'
 import { Printer, FileText } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 
 const TABS = [
   { key: 'barang', label: 'Barang', icon: FileText },
@@ -174,7 +174,7 @@ export default function LaporanPage() {
           filename: 'laporan-stok-masuk-keluar',
           columns: [
             { header: 'No', accessor: (_, i) => i + 1 },
-            { header: 'Tanggal', accessor: 'tanggal' },
+            { header: 'Tanggal', accessor: (row) => formatDate(row.tanggal) },
             { header: 'Barang', accessor: 'barang' },
             { header: 'Tipe', accessor: 'tipe' },
             { header: 'Dari Siapa / Ke Tujuan', accessor: 'dariKe' },
@@ -189,7 +189,7 @@ export default function LaporanPage() {
           filename: 'laporan-riwayat-stok',
           columns: [
             { header: 'No', accessor: (_, i) => i + 1 },
-            { header: 'Tanggal', accessor: 'tanggal' },
+            { header: 'Tanggal', accessor: (row) => formatDate(row.tanggal) },
             { header: 'Barang', accessor: 'barang' },
             { header: 'Tipe', accessor: 'tipe' },
             { header: 'Qty', accessor: 'qty' },
@@ -271,7 +271,7 @@ export default function LaporanPage() {
           ) : filteredStokMasukKeluar.map((row, i) => (
             <tr key={row.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
               <td className="px-4 py-3">{i + 1}</td>
-              <td className="px-4 py-3">{row.tanggal}</td>
+              <td className="px-4 py-3">{formatDate(row.tanggal)}</td>
               <td className="px-4 py-3">{row.barang}</td>
               <td className="px-4 py-3">
                 <span className={cn('px-2 py-0.5 rounded-full text-xs font-medium', tipeBadge[row.tipe])}>
@@ -304,7 +304,7 @@ export default function LaporanPage() {
           ) : filteredRiwayatStok.map((row, i) => (
             <tr key={row.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
               <td className="px-4 py-3">{i + 1}</td>
-              <td className="px-4 py-3">{row.tanggal}</td>
+              <td className="px-4 py-3">{formatDate(row.tanggal)}</td>
               <td className="px-4 py-3">{row.barang}</td>
               <td className="px-4 py-3">
                 <span className={cn('px-2 py-0.5 rounded-full text-xs font-medium', tipeBadge[row.tipe] || 'bg-gray-100 text-gray-700')}>

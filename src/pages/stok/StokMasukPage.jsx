@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import api from '@/api/client'
 import toast from 'react-hot-toast'
 import DataTable from '@/components/common/DataTable'
+import { formatDate } from '@/lib/utils'
 import Modal from '@/components/common/Modal'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
 import PageHeader from '@/components/common/PageHeader'
@@ -124,7 +125,7 @@ export default function StokMasukPage() {
 
   const columns = [
     { header: 'No', accessor: (_, i) => i + 1, width: '50px' },
-    { header: 'Tanggal', accessor: 'tanggal' },
+    { header: 'Tanggal', accessor: (row) => formatDate(row.tanggal) },
     { header: 'Barang', accessor: (row) => getBarangName(row.barang_id) },
     { header: 'Dari Siapa', accessor: (row) => row.dari_siapa || '-' },
     { header: 'Qty', accessor: (row) => row.qty },
