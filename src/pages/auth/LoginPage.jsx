@@ -22,13 +22,11 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setError(''); setLoading(true)
     try {
-      const res = await api.get('/users', { params: { email, password } })
-      if (res.data.length > 0) {
-        const user = res.data[0]
-        if (user.status === 'aktif') { login(user); navigate('/dashboard') }
-        else setError('Akun tidak aktif')
-      } else setError('Email atau password salah')
-    } catch { setError('Gagal terhubung ke server') } finally { setLoading(false) }
+      const res = await api.post('/auth/login', { email, password })
+      const user = res.data
+      if (user && user.status === 'aktif') { login(user); navigate('/dashboard') }
+      else setError('Akun tidak aktif')
+    } catch { setError('Email atau password salah') } finally { setLoading(false) }
   }
 
   return (

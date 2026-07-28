@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: 'http://localhost:3001', timeout: 10000, headers: { 'Content-Type': 'application/json' } })
+const api = axios.create({ baseURL: '/api', timeout: 10000, headers: { 'Content-Type': 'application/json' } })
 
 api.interceptors.request.use((config) => {
   const user = JSON.parse(localStorage.getItem('user') || 'null')
