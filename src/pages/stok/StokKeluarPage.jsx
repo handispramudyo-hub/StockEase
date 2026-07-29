@@ -81,7 +81,7 @@ export default function StokKeluarPage() {
           }
         }
 
-        await api.put(`/stok_keluar/${editItem.id}`, { ...editItem, ...form, barang_id: Number(form.barang_id), qty: Number(form.qty) })
+        await api.put(`/stok_keluar/${editItem.id}`, { barang_id: Number(form.barang_id), qty: Number(form.qty), tanggal: form.tanggal, keterangan: form.keterangan, tujuan: form.tujuan })
         const brg = barangs.find(b => String(b.id) === String(newBarangId))
         await api.post('/aktivitas', {
           aktivitas: `Update stok keluar: ${brg?.nama || ''} qty ${oldQty} → ${newQty} ke ${form.tujuan}`,

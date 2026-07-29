@@ -89,14 +89,18 @@ export default function BarangPage() {
   })
 
   const openAdd = () => { setEditItem(null); setForm(defaultForm); setShowModal(true) }
-  const openEdit = (item) => { setEditItem(item); setForm({ ...item, kategori_id: item.kategori_id }); setShowModal(true) }
+  const openEdit = (item) => {
+    setEditItem(item)
+    setForm({ nama: item.nama, kategori_id: item.kategori_id, stok_minimum: item.stok_minimum, satuan: item.satuan })
+    setShowModal(true)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.nama?.trim()) return toast.error('Nama barang wajib diisi')
     try {
-      const payload = { ...form, stok_minimum: Number(form.stok_minimum), kategori_id: Number(form.kategori_id), status: 'aktif' }
-      if (editItem) { delete payload.stok; await api.put(`/barang/${editItem.id}`, { ...editItem, ...payload }); toast.success('Barang berhasil diupdate') }
+      const payload = { ...form, stok_minimum: Number(form.stok_minimum), kategori_id: form.kategori_id ? Number(form.kategori_id) : null, status: 'aktif' }
+      if (editItem) { delete payload.stok; await api.put(`/barang/${editItem.id}`, payload); toast.success('Barang berhasil diupdate') }
       else { payload.stok = Number(form.stok || 0); await api.post('/barang', { ...payload, created_at: new Date().toISOString() }); toast.success('Barang berhasil ditambahkan') }
       setShowModal(false); fetchData()
     } catch { toast.error('Gagal menyimpan data') }

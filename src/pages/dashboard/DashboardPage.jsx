@@ -23,8 +23,8 @@ export default function DashboardPage() {
 
         const now = new Date()
         const today = now.toISOString().split('T')[0]
-        const smHari = sm.data.filter(s => s.tanggal === today)
-        const skHari = sk.data.filter(s => s.tanggal === today)
+        const smHari = sm.data.filter(s => String(s.tanggal).startsWith(today))
+        const skHari = sk.data.filter(s => String(s.tanggal).startsWith(today))
         const stokMasukHariIni = smHari.reduce((s, p) => s + p.qty, 0)
         const stokKeluarHariIni = skHari.reduce((s, p) => s + p.qty, 0)
 
