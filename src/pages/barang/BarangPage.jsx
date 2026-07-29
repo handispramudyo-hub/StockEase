@@ -64,6 +64,7 @@ export default function BarangPage() {
   const [importHeaders, setImportHeaders] = useState([])
   const [importLoading, setImportLoading] = useState(false)
   const [importResult, setImportResult] = useState(null)
+  const [importData, setImportData] = useState(null)
   const [form, setForm] = useState({})
   const fileRef = useRef(null)
 
@@ -126,6 +127,7 @@ export default function BarangPage() {
         if (json.length === 0) { toast.error('File kosong'); return }
         if (json.length > 1000) { toast.error('Maksimal 1000 baris'); return }
 
+        setImportData(json)
         const headers = Object.keys(json[0])
         setImportHeaders(headers)
         setImportPreview(json.slice(0, 5))
@@ -140,11 +142,7 @@ export default function BarangPage() {
     setImportLoading(true)
     setImportResult(null)
     try {
-      const wb = XLSX.read(await importFile.arrayBuffer(), { type: 'array' })
-      const ws = wb.Sheets[wb.SheetNames[0]]
-      const json = XLSX.utils.sheet_to_json(ws, { defval: '' })
-
-      const mapped = json.map(row => {
+      const mapped = importData.map(row => {
         const item = {}
         Object.entries(importMapping).forEach(([header, field]) => {
           if (field) item[field] = row[header]
@@ -154,10 +152,11 @@ export default function BarangPage() {
 
       const res = await api.post('/barang/import', { data: mapped })
       setImportResult(res.data)
-      toast.success(`${res.data.success} barang berhasil diimport`)
-      if (res.data.errors?.length) toast.error(`${res.data.errors.length} baris gagal`)
+      if (res.data.success > 0) toast.success(`${res.data.success} barang berhasil diimport`)
+      if (res.data.errors?.length > 0) toast.error(`${res.data.errors.length} baris gagal`)
+      if (res.data.success === 0 && !res.data.errors?.length) toast.error('Tidak ada data diimport')
       fetchData()
-    } catch { toast.error('Gagal import data') }
+    } catch (err) { toast.error(err?.response?.data?.message || 'Gagal import data') }
     setImportLoading(false)
   }
 
@@ -168,6 +167,7 @@ export default function BarangPage() {
     setImportMapping({})
     setImportHeaders([])
     setImportResult(null)
+    setImportData(null)
     setImportLoading(false)
     if (fileRef.current) fileRef.current.value = ''
   }
