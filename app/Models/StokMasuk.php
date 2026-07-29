@@ -13,7 +13,7 @@ class StokMasuk extends Model
     protected function casts(): array
     {
         return [
-            'tanggal' => 'date',
+            'tanggal' => 'datetime',
             'qty' => 'integer',
         ];
     }

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import api from '@/api/client'
 import toast from 'react-hot-toast'
 import DataTable from '@/components/common/DataTable'
-import { formatDate } from '@/lib/utils'
+import { formatDateTime } from '@/lib/utils'
 import Modal from '@/components/common/Modal'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
 import PageHeader from '@/components/common/PageHeader'
@@ -16,7 +16,7 @@ export default function StokKeluarPage() {
   const [editItem, setEditItem] = useState(null)
   const [saving, setSaving] = useState(false)
   const [barangs, setBarangs] = useState([])
-  const [form, setForm] = useState({ barang_id: '', qty: 1, tanggal: new Date().toISOString().split('T')[0], keterangan: '', tujuan: '' })
+  const [form, setForm] = useState({ barang_id: '', qty: 1, tanggal: new Date().toISOString().slice(0, 16), keterangan: '', tujuan: '' })
 
   const fetchData = useCallback(async () => {
     try {
@@ -35,7 +35,7 @@ export default function StokKeluarPage() {
 
   const openAdd = () => {
     setEditItem(null)
-    setForm({ barang_id: '', qty: 1, tanggal: new Date().toISOString().split('T')[0], keterangan: '', tujuan: '' })
+    setForm({ barang_id: '', qty: 1, tanggal: new Date().toISOString().slice(0, 16), keterangan: '', tujuan: '' })
     setShowModal(true)
   }
 
@@ -136,7 +136,7 @@ export default function StokKeluarPage() {
 
   const columns = [
     { header: 'No', accessor: (_, i) => i + 1, width: '50px' },
-    { header: 'Tanggal', accessor: (row) => formatDate(row.tanggal) },
+    { header: 'Tanggal & Waktu', accessor: (row) => formatDateTime(row.tanggal) },
     { header: 'Barang', accessor: (row) => getBarangName(row.barang_id) },
     { header: 'Ke / Tujuan', accessor: (row) => row.tujuan || '-' },
     { header: 'Qty', accessor: (row) => row.qty },
@@ -188,8 +188,8 @@ export default function StokKeluarPage() {
                 className="w-full px-3 py-2 bg-background border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring" required />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Tanggal *</label>
-              <input type="date" value={form.tanggal} onChange={e => setForm({ ...form, tanggal: e.target.value })}
+              <label className="block text-sm font-medium mb-1">Tanggal & Waktu *</label>
+              <input type="datetime-local" value={form.tanggal} onChange={e => setForm({ ...form, tanggal: e.target.value })}
                 className="w-full px-3 py-2 bg-background border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring" required />
             </div>
           </div>
