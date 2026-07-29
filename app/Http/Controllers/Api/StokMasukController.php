@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\StokMasuk;
+use App\Models\Barang;
 use Illuminate\Http\Request;
 
 class StokMasukController extends Controller
@@ -33,7 +34,22 @@ class StokMasukController extends Controller
 
     public function destroy($id)
     {
-        StokMasuk::findOrFail($id)->delete();
+        $item = StokMasuk::findOrFail($id);
+        $brg = Barang::find($item->barang_id);
+        if ($brg) $brg->decrement('stok', $item->qty);
+        $item->delete();
         return response()->json(null, 204);
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate(['ids' => 'required|array', 'ids.*' => 'integer|exists:stok_masuks,id']);
+        $items = StokMasuk::whereIn('id', $request->ids)->get();
+        foreach ($items as $item) {
+            $brg = Barang::find($item->barang_id);
+            if ($brg) $brg->decrement('stok', $item->qty);
+            $item->delete();
+        }
+        return response()->json(['deleted' => count($request->ids)]);
     }
 }

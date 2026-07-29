@@ -54,6 +54,13 @@ class BarangController extends Controller
         return response()->json(null, 204);
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate(['ids' => 'required|array', 'ids.*' => 'integer|exists:barangs,id']);
+        Barang::whereIn('id', $request->ids)->delete();
+        return response()->json(['deleted' => count($request->ids)]);
+    }
+
     public function import(Request $request)
     {
         $request->validate([

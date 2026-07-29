@@ -66,6 +66,8 @@ export default function BarangPage() {
   const [importResult, setImportResult] = useState(null)
   const [importData, setImportData] = useState(null)
   const [form, setForm] = useState({})
+  const [selected, setSelected] = useState([])
+  const [showBulkDelete, setShowBulkDelete] = useState(false)
   const fileRef = useRef(null)
 
   const defaultForm = { nama: '', kategori_id: '', stok: '', stok_minimum: 10, satuan: 'PCS' }
@@ -109,6 +111,11 @@ export default function BarangPage() {
 
   const handleDelete = async () => {
     try { await api.delete(`/barang/${showDelete}`); toast.success('Barang berhasil dihapus'); setShowDelete(null); fetchData() }
+    catch { toast.error('Gagal menghapus data') }
+  }
+
+  const handleBulkDelete = async () => {
+    try { await api.post('/barang/bulk-delete', { ids: selected }); toast.success(`${selected.length} barang berhasil dihapus`); setSelected([]); setShowBulkDelete(false); fetchData() }
     catch { toast.error('Gagal menghapus data') }
   }
 
@@ -173,6 +180,14 @@ export default function BarangPage() {
   }
 
   const columns = [
+    { header: (
+      <input type="checkbox" checked={selected.length === filtered.length && filtered.length > 0}
+        onChange={() => { if (selected.length === filtered.length) setSelected([]); else setSelected(filtered.map(d => d.id)) }}
+        className="w-4 h-4 rounded border-border accent-primary" />
+    ), accessor: (row) => (
+      <input type="checkbox" checked={selected.includes(row.id)} onChange={() => setSelected(p => p.includes(row.id) ? p.filter(x => x !== row.id) : [...p, row.id])}
+        className="w-4 h-4 rounded border-border accent-primary" />
+    ), width: '40px' },
     { header: 'No', accessor: (_, i) => i + 1, width: '50px' },
     { header: 'Nama Barang', accessor: (row) => <div className="flex items-center gap-2"><Package className="w-4 h-4 text-muted-foreground shrink-0" /><span className="truncate">{row.nama}</span></div> },
     { header: 'Kategori', accessor: (row) => kMap[row.kategori_id]?.nama || '-' },
@@ -202,6 +217,11 @@ export default function BarangPage() {
     <div className="space-y-6">
       <PageHeader title="Barang" subtitle="Kelola data barang" actions={
         <div className="flex gap-2">
+          {selected.length > 0 && (
+            <button onClick={() => setShowBulkDelete(true)} className="flex items-center gap-2 bg-destructive text-destructive-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-destructive/90">
+              <Trash2 className="w-4 h-4" /> Hapus ({selected.length})
+            </button>
+          )}
           <button onClick={() => setShowPDF(true)} className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"><Printer className="w-4 h-4" /> Cetak PDF</button>
           <button onClick={() => { setImportStep(1); setImportLoading(false); setImportResult(null); setImportFile(null); setShowImport(true) }} className="flex items-center gap-2 bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-cyan-700 transition-colors"><Upload className="w-4 h-4" /> Import Excel</button>
           <button onClick={openAdd} className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90"><Plus className="w-4 h-4" /> Tambah Barang</button>
@@ -257,6 +277,9 @@ export default function BarangPage() {
       )}
 
       <ConfirmDialog isOpen={!!showDelete} onClose={() => setShowDelete(null)} onConfirm={handleDelete} title="Hapus Barang" message="Barang yang dihapus tidak dapat dikembalikan." variant="danger" />
+
+      <ConfirmDialog isOpen={showBulkDelete} onClose={() => setShowBulkDelete(false)} onConfirm={handleBulkDelete}
+        title="Hapus Barang Terpilih" message={`${selected.length} barang akan dihapus. Yakin?`} variant="danger" />
 
       {showPDF && (
         <PDFPreviewModal
