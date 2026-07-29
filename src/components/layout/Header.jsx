@@ -1,21 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import useAuthStore from '@/store/authStore'
 import useAppStore from '@/store/appStore'
 import api from '@/api/client'
 import { formatDateTime } from '@/lib/utils'
-import { Menu, Bell, Search, Sun, Moon, X, Check } from 'lucide-react'
+import { Menu, Bell, Sun, Moon, X, Check, Clock } from 'lucide-react'
 
 export default function Header() {
   const { user } = useAuthStore()
   const { toggleSidebar, theme, setTheme } = useAppStore()
-  const navigate = useNavigate()
   const [notifications, setNotifications] = useState([])
   const [showNotif, setShowNotif] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [time, setTime] = useState(new Date())
   const notifRef = useRef(null)
 
-  useEffect(() => { api.get('/notifikasi').then(r => setNotifications(r.data)).catch(() => {}) }, [])
+  useEffect(() => {
+    api.get('/notifikasi').then(r => setNotifications(r.data)).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     const h = (e) => { if (notifRef.current && !notifRef.current.contains(e.target)) setShowNotif(false) }
@@ -30,15 +35,27 @@ export default function Header() {
     setNotifications(p => p.map(n => n.id === id ? { ...n, status: 'read' } : n))
   }
 
+  const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+  const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+
+  const dayName = days[time.getDay()]
+  const date = time.getDate()
+  const month = months[time.getMonth()]
+  const year = time.getFullYear()
+  const hours = String(time.getHours()).padStart(2, '0')
+  const minutes = String(time.getMinutes()).padStart(2, '0')
+  const seconds = String(time.getSeconds()).padStart(2, '0')
+
   return (
     <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30">
       <div className="flex items-center gap-3">
         <button onClick={toggleSidebar} className="p-2 hover:bg-muted rounded-lg transition-colors lg:hidden"><Menu className="w-5 h-5" /></button>
-        <div className="hidden sm:flex items-center gap-2 bg-muted rounded-lg px-3 py-2">
-          <Search className="w-4 h-4 text-muted-foreground" />
-          <input type="text" placeholder="Cari barang, supplier..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && searchQuery.trim()) { navigate(`/barang?search=${encodeURIComponent(searchQuery)}`); setSearchQuery('') } }}
-            className="bg-transparent border-none outline-none text-sm w-48 lg:w-64 placeholder:text-muted-foreground" />
+        <div className="hidden sm:flex items-center gap-3 text-sm">
+          <Clock className="w-4 h-4 text-primary animate-pulse" />
+          <div className="leading-tight">
+            <span className="font-mono font-bold text-foreground tabular-nums">{hours}:{minutes}:<span className="text-primary animate-pulse">{seconds}</span></span>
+            <span className="text-muted-foreground ml-2">{dayName}, {date} {month} {year}</span>
+          </div>
         </div>
       </div>
       <div className="flex items-center gap-2">
