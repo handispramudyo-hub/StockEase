@@ -28,7 +28,11 @@ class BarangController extends Controller
 
     public function store(Request $request)
     {
-        $barang = Barang::create($request->all());
+        $data = $request->all();
+        if (empty($data['kode_barang'])) {
+            $data['kode_barang'] = 'BRG-' . date('Ymd') . '-' . str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
+        }
+        $barang = Barang::create($data);
         return response()->json($barang, 201);
     }
 

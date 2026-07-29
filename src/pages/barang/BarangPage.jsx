@@ -101,7 +101,7 @@ export default function BarangPage() {
     try {
       const payload = { ...form, stok_minimum: Number(form.stok_minimum), kategori_id: form.kategori_id ? Number(form.kategori_id) : null, status: 'aktif' }
       if (editItem) { delete payload.stok; await api.put(`/barang/${editItem.id}`, payload); toast.success('Barang berhasil diupdate') }
-      else { payload.stok = Number(form.stok || 0); await api.post('/barang', { ...payload, created_at: new Date().toISOString() }); toast.success('Barang berhasil ditambahkan') }
+      else { payload.stok = Number(form.stok || 0); await api.post('/barang', payload); toast.success('Barang berhasil ditambahkan') }
       setShowModal(false); fetchData()
     } catch { toast.error('Gagal menyimpan data') }
   }
