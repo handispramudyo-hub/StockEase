@@ -18,8 +18,8 @@ Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::apiResource('users', UserController::class);
 Route::apiResource('kategori', KategoriController::class);
-Route::apiResource('barang', BarangController::class);
 Route::post('/barang/import', [BarangController::class, 'import']);
+Route::apiResource('barang', BarangController::class);
 
 Route::get('/stok_masuk', [StokMasukController::class, 'index']);
 Route::post('/stok_masuk', [StokMasukController::class, 'store']);
