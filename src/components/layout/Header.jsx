@@ -14,7 +14,10 @@ export default function Header() {
   const notifRef = useRef(null)
 
   useEffect(() => {
-    api.get('/notifikasi').then(r => setNotifications(r.data)).catch(() => {})
+    const fetchNotif = () => api.get('/notifikasi').then(r => setNotifications(r.data)).catch(() => {})
+    fetchNotif()
+    const interval = setInterval(fetchNotif, 30000)
+    return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {

@@ -88,11 +88,6 @@ export default function StokMasukPage() {
         }
 
         await api.put(`/stok_masuk/${editItem.id}`, { barang_id: Number(form.barang_id), qty: Number(form.qty), tanggal: form.tanggal, keterangan: form.keterangan, dari_siapa: form.dari_siapa })
-        const brg = barangs.find(b => String(b.id) === String(newBarangId))
-        await api.post('/aktivitas', {
-          aktivitas: `Update stok masuk: ${brg?.nama || ''} qty ${oldQty} → ${newQty} dari ${form.dari_siapa}`,
-          tanggal: form.tanggal,
-        })
         toast.success('Stok masuk berhasil diupdate')
       } else {
         await api.post('/stok_masuk', form)
@@ -100,10 +95,6 @@ export default function StokMasukPage() {
         if (brg) {
           await api.patch(`/barang/${form.barang_id}`, { stok: (brg.stok || 0) + Number(form.qty) })
         }
-        await api.post('/aktivitas', {
-          aktivitas: `Stok masuk: ${brg?.nama || ''} +${form.qty} dari ${form.dari_siapa}`,
-          tanggal: form.tanggal,
-        })
         toast.success('Stok masuk berhasil disimpan')
       }
       setShowModal(false)

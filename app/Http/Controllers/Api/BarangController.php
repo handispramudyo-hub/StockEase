@@ -7,6 +7,8 @@ use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Supplier;
 use App\Models\Gudang;
+use App\Models\Aktivitas;
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 
 class BarangController extends Controller
@@ -33,6 +35,14 @@ class BarangController extends Controller
             $data['kode_barang'] = 'BRG-' . date('Ymd') . '-' . str_pad(random_int(0, 999), 3, '0', STR_PAD_LEFT);
         }
         $barang = Barang::create($data);
+
+        Aktivitas::create([
+            'aktivitas' => "Barang {$barang->nama} ditambahkan",
+            'waktu' => now(),
+        ]);
+
+        $this->cekNotifikasi($barang);
+
         return response()->json($barang, 201);
     }
 
@@ -44,20 +54,39 @@ class BarangController extends Controller
     public function update(Request $request, $id)
     {
         $barang = Barang::findOrFail($id);
+        $namaLama = $barang->nama;
         $barang->update($request->all());
+
+        Aktivitas::create([
+            'aktivitas' => "Barang {$namaLama} diperbarui",
+            'waktu' => now(),
+        ]);
+
+        $this->cekNotifikasi($barang->fresh());
+
         return response()->json($barang);
     }
 
     public function destroy($id)
     {
-        Barang::findOrFail($id)->delete();
+        $barang = Barang::findOrFail($id);
+        Aktivitas::create([
+            'aktivitas' => "Barang {$barang->nama} dihapus",
+            'waktu' => now(),
+        ]);
+        $barang->delete();
         return response()->json(null, 204);
     }
 
     public function bulkDestroy(Request $request)
     {
         $request->validate(['ids' => 'required|array', 'ids.*' => 'integer|exists:barangs,id']);
+        $names = Barang::whereIn('id', $request->ids)->pluck('nama')->implode(', ');
         Barang::whereIn('id', $request->ids)->delete();
+        Aktivitas::create([
+            'aktivitas' => count($request->ids) . " barang dihapus: {$names}",
+            'waktu' => now(),
+        ]);
         return response()->json(['deleted' => count($request->ids)]);
     }
 
@@ -128,9 +157,33 @@ class BarangController extends Controller
             }
         }
 
+        Aktivitas::create([
+            'aktivitas' => "Import {$success} barang (" . count($errors) . " error)",
+            'waktu' => now(),
+        ]);
+
         return response()->json([
             'success' => $success,
             'errors' => $errors,
         ]);
+    }
+
+    private function cekNotifikasi(Barang $barang): void
+    {
+        if ($barang->stok <= 0) {
+            Notifikasi::create([
+                'judul' => 'Stok Habis',
+                'pesan' => "{$barang->nama} sudah habis",
+                'status' => 'unread',
+                'waktu' => now(),
+            ]);
+        } elseif ($barang->stok_minimum > 0 && $barang->stok <= $barang->stok_minimum) {
+            Notifikasi::create([
+                'judul' => 'Stok Menipis',
+                'pesan' => "{$barang->nama} tersisa {$barang->stok} (min. {$barang->stok_minimum})",
+                'status' => 'unread',
+                'waktu' => now(),
+            ]);
+        }
     }
 }

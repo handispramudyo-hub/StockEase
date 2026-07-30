@@ -94,11 +94,6 @@ export default function StokKeluarPage() {
         }
 
         await api.put(`/stok_keluar/${editItem.id}`, { barang_id: Number(form.barang_id), qty: Number(form.qty), tanggal: form.tanggal, keterangan: form.keterangan, tujuan: form.tujuan })
-        const brg = barangs.find(b => String(b.id) === String(newBarangId))
-        await api.post('/aktivitas', {
-          aktivitas: `Update stok keluar: ${brg?.nama || ''} qty ${oldQty} → ${newQty} ke ${form.tujuan}`,
-          tanggal: form.tanggal,
-        })
         toast.success('Stok keluar berhasil diupdate')
       } else {
         const brg = barangs.find(b => String(b.id) === String(form.barang_id))
@@ -111,10 +106,6 @@ export default function StokKeluarPage() {
         if (brg) {
           await api.patch(`/barang/${form.barang_id}`, { stok: (brg.stok || 0) - Number(form.qty) })
         }
-        await api.post('/aktivitas', {
-          aktivitas: `Stok keluar: ${brg?.nama || ''} -${form.qty} ke ${form.tujuan} (${form.keterangan || 'Tanpa keterangan'})`,
-          tanggal: form.tanggal,
-        })
         toast.success('Stok keluar berhasil disimpan')
       }
       setShowModal(false)
