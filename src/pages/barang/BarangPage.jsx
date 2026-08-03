@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import api from '@/api/client'
 import toast from 'react-hot-toast'
+import useUiStore from '@/store/uiStore'
 import DataTable from '@/components/common/DataTable'
 import Modal from '@/components/common/Modal'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
@@ -45,6 +46,7 @@ function getStokStatus(b) {
 }
 
 export default function BarangPage() {
+  const triggerNotifRefresh = useUiStore(s => s.triggerNotifRefresh)
   const [data, setData] = useState([])
   const [kategoriList, setKategoriList] = useState([])
   const [loading, setLoading] = useState(true)
@@ -105,17 +107,17 @@ export default function BarangPage() {
       const payload = { ...form, stok_minimum: Number(form.stok_minimum), kategori_id: form.kategori_id ? Number(form.kategori_id) : null, status: 'aktif' }
       if (editItem) { delete payload.stok; await api.put(`/barang/${editItem.id}`, payload); toast.success('Barang berhasil diupdate') }
       else { payload.stok = Number(form.stok || 0); await api.post('/barang', payload); toast.success('Barang berhasil ditambahkan') }
-      setShowModal(false); fetchData()
+      setShowModal(false); fetchData(); triggerNotifRefresh()
     } catch { toast.error('Gagal menyimpan data') }
   }
 
   const handleDelete = async () => {
-    try { await api.delete(`/barang/${showDelete}`); toast.success('Barang berhasil dihapus'); setShowDelete(null); fetchData() }
+    try { await api.delete(`/barang/${showDelete}`); toast.success('Barang berhasil dihapus'); setShowDelete(null); fetchData(); triggerNotifRefresh() }
     catch { toast.error('Gagal menghapus data') }
   }
 
   const handleBulkDelete = async () => {
-    try { await api.post('/barang/bulk-delete', { ids: selected }); toast.success(`${selected.length} barang berhasil dihapus`); setSelected([]); setShowBulkDelete(false); fetchData() }
+    try { await api.post('/barang/bulk-delete', { ids: selected }); toast.success(`${selected.length} barang berhasil dihapus`); setSelected([]); setShowBulkDelete(false); fetchData(); triggerNotifRefresh() }
     catch { toast.error('Gagal menghapus data') }
   }
 
@@ -162,7 +164,7 @@ export default function BarangPage() {
       if (res.data.success > 0) toast.success(`${res.data.success} barang berhasil diimport`)
       if (res.data.errors?.length > 0) toast.error(`${res.data.errors.length} baris gagal`)
       if (res.data.success === 0 && !res.data.errors?.length) toast.error('Tidak ada data diimport')
-      fetchData()
+      fetchData(); triggerNotifRefresh()
     } catch (err) { toast.error(err?.response?.data?.message || 'Gagal import data') }
     setImportLoading(false)
   }

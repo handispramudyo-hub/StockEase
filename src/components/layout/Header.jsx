@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import useAuthStore from '@/store/authStore'
 import useAppStore from '@/store/appStore'
+import useUiStore from '@/store/uiStore'
 import api from '@/api/client'
 import { formatDateTime } from '@/lib/utils'
 import { Menu, Bell, Sun, Moon, X, Check, Clock } from 'lucide-react'
@@ -8,6 +9,7 @@ import { Menu, Bell, Sun, Moon, X, Check, Clock } from 'lucide-react'
 export default function Header() {
   const { user } = useAuthStore()
   const { toggleSidebar, theme, setTheme } = useAppStore()
+  const notifVersion = useUiStore(s => s.notifVersion)
   const [notifications, setNotifications] = useState([])
   const [showNotif, setShowNotif] = useState(false)
   const [time, setTime] = useState(new Date())
@@ -19,6 +21,10 @@ export default function Header() {
     const interval = setInterval(fetchNotif, 30000)
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    api.get('/notifikasi').then(r => setNotifications(r.data)).catch(() => {})
+  }, [notifVersion])
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)

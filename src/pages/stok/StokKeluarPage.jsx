@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import api from '@/api/client'
 import toast from 'react-hot-toast'
+import useUiStore from '@/store/uiStore'
 import DataTable from '@/components/common/DataTable'
 import { formatDate } from '@/lib/utils'
 import Modal from '@/components/common/Modal'
@@ -9,6 +10,7 @@ import PageHeader from '@/components/common/PageHeader'
 import { Plus, Edit, Trash2, ArrowUpFromLine, Search, X, Check } from 'lucide-react'
 
 export default function StokKeluarPage() {
+  const triggerNotifRefresh = useUiStore(s => s.triggerNotifRefresh)
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -111,6 +113,7 @@ export default function StokKeluarPage() {
       setShowModal(false)
       setEditItem(null)
       fetchData()
+      triggerNotifRefresh()
     } catch {
       toast.error('Gagal menyimpan data')
     } finally {
@@ -124,6 +127,7 @@ export default function StokKeluarPage() {
       toast.success('Stok keluar berhasil dihapus')
       setShowDelete(null)
       fetchData()
+      triggerNotifRefresh()
     } catch {
       toast.error('Gagal menghapus data')
     }
@@ -136,6 +140,7 @@ export default function StokKeluarPage() {
       setSelected([])
       setShowBulkDelete(false)
       fetchData()
+      triggerNotifRefresh()
     } catch {
       toast.error('Gagal menghapus data')
     }

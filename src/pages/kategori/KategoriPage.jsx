@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import api from '@/api/client'
 import toast from 'react-hot-toast'
+import useUiStore from '@/store/uiStore'
 import DataTable from '@/components/common/DataTable'
 import Modal from '@/components/common/Modal'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
@@ -8,6 +9,7 @@ import PageHeader from '@/components/common/PageHeader'
 import { Plus, Edit, Trash2 } from 'lucide-react'
 
 export default function KategoriPage() {
+  const triggerNotifRefresh = useUiStore(s => s.triggerNotifRefresh)
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -27,12 +29,12 @@ export default function KategoriPage() {
     try {
       if (editItem) { await api.put(`/kategori/${editItem.id}`, { ...editItem, ...form }); toast.success('Kategori berhasil diupdate') }
       else { await api.post('/kategori', form); toast.success('Kategori berhasil ditambahkan') }
-      setShowModal(false); fetchData()
+      setShowModal(false); fetchData(); triggerNotifRefresh()
     } catch { toast.error('Gagal menyimpan data') }
   }
 
   const handleDelete = async () => {
-    try { await api.delete(`/kategori/${showDelete}`); toast.success('Kategori berhasil dihapus'); setShowDelete(null); fetchData() }
+    try { await api.delete(`/kategori/${showDelete}`); toast.success('Kategori berhasil dihapus'); setShowDelete(null); fetchData(); triggerNotifRefresh() }
     catch { toast.error('Gagal menghapus data') }
   }
 

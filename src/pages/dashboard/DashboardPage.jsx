@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import api from '@/api/client'
+import useUiStore from '@/store/uiStore'
 
 import { Package, AlertTriangle, XCircle, ShoppingCart, ArrowDownToLine, ArrowUpFromLine } from 'lucide-react'
 import { LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
@@ -9,9 +10,9 @@ const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'
 export default function DashboardPage() {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
+  const notifVersion = useUiStore(s => s.notifVersion)
 
-  useEffect(() => {
-    const fetch = async () => {
+  const fetchData = useCallback(async () => {
       try {
         const [brg, kat, sm, sk, akt, notif] = await Promise.all([
           api.get('/barang'), api.get('/kategori'), api.get('/stok_masuk'), api.get('/stok_keluar'),
@@ -53,9 +54,13 @@ export default function DashboardPage() {
           aktivitas: akt.data.slice(0, 5), notifikasi: notif.data,
         })
       } catch(e) { console.error(e) } finally { setLoading(false) }
-    }
-    fetch()
   }, [])
+
+  useEffect(() => { fetchData() }, [fetchData])
+
+  useEffect(() => {
+    if (stats) fetchData()
+  }, [notifVersion, fetchData, stats])
 
   if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>
 

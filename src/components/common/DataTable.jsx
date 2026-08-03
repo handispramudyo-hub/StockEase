@@ -7,7 +7,7 @@ export default function DataTable({ columns, data = [], loading = false, searcha
   const [sortKey, setSortKey] = useState(null)
   const [sortDir, setSortDir] = useState('asc')
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(initialPageSize)
+  const pageSize = initialPageSize
 
   const handleSearch = (val) => { setSearch(val); onSearch?.(val); setPage(1) }
 
@@ -43,13 +43,9 @@ export default function DataTable({ columns, data = [], loading = false, searcha
   return (
     <div>
       {searchable && (
-        <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+        <div className="p-4 border-b border-border">
           <input type="text" placeholder={searchPlaceholder || 'Cari...'} value={search} onChange={e => handleSearch(e.target.value)}
             className="px-3 py-2 bg-background border border-input rounded-lg text-sm w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-ring" />
-          <select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1) }}
-            className="px-3 py-2 bg-background border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-            <option value={10}>10 / halaman</option><option value={25}>25 / halaman</option><option value={50}>50 / halaman</option>
-          </select>
         </div>
       )}
       <div className="overflow-x-auto">
